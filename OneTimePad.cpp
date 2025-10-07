@@ -13,7 +13,7 @@ string OneTimePad::generateKey(size_t length) {
     return key;
 }
 
-void OneTimePad::setKey(const string &k) {
+void OneTimePad::setKey(const string &k) {  
     key = k;
 }
 
