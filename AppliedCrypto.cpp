@@ -1,19 +1,24 @@
 #include <iostream>
-using namespace std;
-
 #include "Vigenere_Cipher.hpp"
 #include "Hill_Cipher.hpp"
 #include "Shift_Cipher.hpp"
 #include "OneTimePad.hpp"
-#include "DiffieHellman.hpp"
+#include "Diffie_Hellman.hpp"
+#include <NTL/ZZ.h>
+#include "El_Gamal.hpp"
+
+using namespace std;
+using namespace NTL;
 
 int main()
 {
-    string ans = "Cryptography";
-    string ans3 = "";
-    cout << "\n" << ans;
+    // cout << "hello World";
+    // string ans = "Cryptography";
+    // string ans2 = "cississc";
+    // string ans3 = "";
+    // cout << "\n" << ans;
 
-    // Shift Cipher
+    // // Shift Cipher
     // cout << "\n\n --- Shift Cipher --- ";
     // Shift_Cipher sc;
     // char AD = char(69);
@@ -25,16 +30,16 @@ int main()
     // ans = sc.Decryption(ans3, a);
     // cout << "\nDEC - " << ans;
 
-    // Vigenere Cipher
+    // // Vigenere Cipher
     // cout << "\n\n --- Vigenere Cipher --- ";
     // Vigenere_Cipher v;
     // cout << "\nORG - " << ans;
-    // ans3 = v.Encryption(ans, "ISSC");
+    // ans3 = v.Encryption(ans, ans2);
     // cout << "\nENC - " << ans3;
-    // ans3 = v.Decryption(ans3, "ISSC");
+    // ans3 = v.Decryption(ans3, ans2);
     // cout << "\nDEC - " << ans3;
 
-    // Hill Cipher
+    // // Hill Cipher
     // cout << "\n\n --- Hill Cipher ---";
     // HillCipher hc;
     // hc.GenerateRandomKey();
@@ -44,47 +49,56 @@ int main()
     // ans3 = hc.Decryption(ans3);
     // cout << "\nDEC - " << ans3;
 
+    // // One Time Pad
+    // cout << "\n\n --- One Time Pad ---";
+    // OneTimePad otp;
+    // string key = otp.generateKey(ans.size());
+    // cout << "\nORG - " << ans;
+    // ans3 = otp.encrypt(ans);
+    // cout << "\nENC - " << ans3;
+    // ans3 = otp.decrypt(ans3);
+    // cout << "\nDEC - " << ans3;
+
+
+    // // Diffie Hellman
+    // DiffieHellman dh(13);
+    // cout << "\n\n --- Diffie Hellman ---";
+    // dh.generateValues();
+    // dh.computePublicKeys();
+    // dh.computeSharedKeys();
+    // dh.display();
 
 
 
+    // El-Gamal
+    cout << "\n--- El-Gamal ---\n";
+    ElGamal elg(257); 
 
+    elg.generateKeys();
+    elg.showKeys();
 
-    // One Time Pad
-    cout << "\n\n --- One Time Pad ---";
-    OneTimePad otp;
-    string key = otp.generateKey(ans.size());
-    cout << "\nORG - " << ans;
-    ans3 = otp.encrypt(ans);
-    cout << "\nENC - " << ans3;  
-    ans3 = otp.decrypt(ans3);
-    cout << "\nDEC - " << ans3;
+    // Encrypt/decrypt one number
+    ZZ_p m = conv<ZZ_p>(15);
+    ZZ_p c1, c2;
+    elg.encrypt(m, c1, c2);
+    ZZ_p dec = elg.decrypt(c1, c2);
+    cout << "\nOriginal m = " << m << ", Decrypted m = " << dec << "\n";
 
-    // Diffie-Hellman Key Exchange
-    cout << "\n\n --- Diffie-Hellman Key Exchange ---\n";
-    ZZ p = to_ZZ("13");
-    ZZ g = to_ZZ("2");
+    // Encrypt/decrypt string
+    string msg = "Hi";
+    vector<ZZ_p> c1s, c2s;
+    elg.encryptString(msg, c1s, c2s);
+    string decMsg = elg.decryptString(c1s, c2s);
+    cout << "Original msg = " << msg << ", Decrypted msg = " << decMsg << "\n";
 
-    // Alice
-    DiffieHellman Alice(p, g);
-    Alice.setPrivateKey(to_ZZ("11")); // Alice's private key
-    ZZ pubAlice = Alice.getPublicKey();
+    // Signing and verification
+    ZZ mHash = conv<ZZ>(42);
+    ZZ_p r, s;
+    elg.signMessage(mHash, r, s);
+    cout << "\nSignature: r = " << r << ", s = " << s << "\n";
 
-    // Bob
-    DiffieHellman Bob(p, g);
-    Bob.setPrivateKey(to_ZZ("9"));  // Bob's private key
-    ZZ pubBob = Bob.getPublicKey();
-
-    cout << "Prime (p): " << p << endl;
-    cout << "Generator (g): " << g << endl;
-    cout << "Alice's Public Key: " << pubAlice << endl;
-    cout << "Bob's Public Key: " << pubBob << endl;
-
-    // Compute shared secret
-    ZZ secretAlice = Alice.getSharedSecret(pubBob);
-    ZZ secretBob = Bob.getSharedSecret(pubAlice);
-
-    cout << "Shared Secret at Alice: " << secretAlice << endl;
-    cout << "Shared Secret at Bob: " << secretBob << endl;
+    bool ok = elg.verifyMessage(mHash, r, s);
+    cout << "Verify: " << (ok ? "valid ✅" : "invalid ❌") << "\n";
 
 
     return 0;
@@ -93,5 +107,10 @@ int main()
 
 
 
-// g++ AppliedCrypto.cpp OneTimePad.cpp DiffieHellman.cpp -o Myexe -lntl -lgmp
+
+
+
+
+
+// g++ AppliedCrypto.cpp El_Gamal.cpp -lntl -lgmp -o Myexe
 // ./Myexe
