@@ -79,7 +79,7 @@ int main()
 
     // Encrypt/decrypt one number
     ZZ_p m = conv<ZZ_p>(15);     
-    ZZ_p c1, c2;
+    ZZ_p c1, c2;    
     elg.encrypt(m, c1, c2);
     ZZ_p dec = elg.decrypt(c1, c2);
     cout << "\nOriginal m = " << m << ", Decrypted m = " << dec << "\n";
