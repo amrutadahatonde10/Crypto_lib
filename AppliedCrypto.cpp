@@ -77,7 +77,7 @@ int main()
     elg.generateKeys();
     elg.showKeys();
 
-    // Encrypt/decrypt one number
+    // Encrypt/decrypt number
     ZZ_p m = conv<ZZ_p>(15);     
     ZZ_p c1, c2;    
     elg.encrypt(m, c1, c2);
@@ -85,14 +85,14 @@ int main()
     cout << "\nOriginal m = " << m << ", Decrypted m = " << dec << "\n";
 
     // Encrypt/decrypt string
-    string msg = "Hi";
+    string msg = "Hello World";
     vector<ZZ_p> c1s, c2s;
     elg.encryptString(msg, c1s, c2s);
     string decMsg = elg.decryptString(c1s, c2s);
     cout << "Original msg = " << msg << ", Decrypted msg = " << decMsg << "\n";
 
     // Signing and verification
-    ZZ mHash = conv<ZZ>(42);
+    ZZ mHash = conv<ZZ>(2);
     ZZ_p r, s;
     elg.signMessage(mHash, r, s);
     cout << "\nSignature: r = " << r << ", s = " << s << "\n";

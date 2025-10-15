@@ -10,7 +10,7 @@ using namespace NTL;
 ElGamal::ElGamal(long prime)
 {
     p = conv<ZZ>(prime);
-    ZZ_p::init(p); // initialize modular field
+    ZZ_p::init(p); 
     srand(static_cast<unsigned>(time(nullptr)));
 }
 
