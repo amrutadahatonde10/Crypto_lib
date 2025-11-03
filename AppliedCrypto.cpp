@@ -6,6 +6,7 @@
 #include "Diffie_Hellman.hpp"
 #include <NTL/ZZ.h>
 #include "El_Gamal.hpp"
+#include "Eliptic_Curve.hpp"
 
 using namespace std;
 using namespace NTL;
@@ -70,36 +71,81 @@ int main()
 
 
 
-    // El-Gamal
-    cout << "\n--- El-Gamal ---\n";
-    ElGamal elg(257); 
+    // // El-Gamal
+    // cout << "\n--- El-Gamal ---\n";
+    // ElGamal elg(257); 
 
-    elg.generateKeys();
-    elg.showKeys();
+    // elg.generateKeys();
+    // elg.showKeys();
 
-    // Encrypt/decrypt number
-    ZZ_p m = conv<ZZ_p>(15);     
-    ZZ_p c1, c2;    
-    elg.encrypt(m, c1, c2);
-    ZZ_p dec = elg.decrypt(c1, c2);
-    cout << "\nOriginal m = " << m << ", Decrypted m = " << dec << "\n";
+    // // Encrypt/decrypt number
+    // ZZ_p m = conv<ZZ_p>(15);     
+    // ZZ_p c1, c2;    
+    // elg.encrypt(m, c1, c2);
+    // ZZ_p dec = elg.decrypt(c1, c2);
+    // cout << "\nOriginal m = " << m << ", Decrypted m = " << dec << "\n";
 
-    // Encrypt/decrypt string
-    string msg = "Hello World";
-    vector<ZZ_p> c1s, c2s;
-    elg.encryptString(msg, c1s, c2s);
-    string decMsg = elg.decryptString(c1s, c2s);
-    cout << "Original msg = " << msg << ", Decrypted msg = " << decMsg << "\n";
+    // // Encrypt/decrypt string
+    // string msg = "Hello World";
+    // vector<ZZ_p> c1s, c2s;
+    // elg.encryptString(msg, c1s, c2s);
+    // string decMsg = elg.decryptString(c1s, c2s);
+    // cout << "Original msg = " << msg << ", Decrypted msg = " << decMsg << "\n";
 
-    // Signing and verification
-    ZZ mHash = conv<ZZ>(2);
-    ZZ_p r, s;
-    elg.signMessage(mHash, r, s);
-    cout << "\nSignature: r = " << r << ", s = " << s << "\n";
+    // // Signing and verification
+    // ZZ mHash = conv<ZZ>(2);
+    // ZZ_p r, s;
+    // elg.signMessage(mHash, r, s);
+    // cout << "\nSignature: r = " << r << ", s = " << s << "\n";
 
-    bool ok = elg.verifyMessage(mHash, r, s);
-    cout << "Verify: " << (ok ? "valid ✅" : "invalid ❌") << "\n";
+    // bool ok = elg.verifyMessage(mHash, r, s);
+    // cout << "Verify: " << (ok ? "valid ✅" : "invalid ❌") << "\n";
 
+
+
+
+ cout << "\n\n------------------------- Elliptic Curve -------------------------\n";
+
+    ZZ p = conv<ZZ>(97); // prime modulus
+    ZZ aEC = conv<ZZ>(2);
+    ZZ bEC = conv<ZZ>(3);
+
+    // Create elliptic curve and initialize ZZ_p field
+    ELCurve curve(p, aEC, bEC);
+
+    // Define points using ZZ_p type
+    ZZ_p Px = to_ZZ_p(3);
+    ZZ_p Py = to_ZZ_p(6);
+    ZZ_p Qx = to_ZZ_p(80);
+    ZZ_p Qy = to_ZZ_p(10);
+
+    ECPoint P(Px, Py);
+    ECPoint Q(Qx, Qy);
+
+    // Point At Curve or Not [ Validation ]
+    cout << "\nChecking points validity:\n";
+    cout << "P is " << (curve.isValidPoint(P) ? "valid" : "invalid") << endl;
+    cout << "Q is " << (curve.isValidPoint(Q) ? "valid" : "invalid") << endl;
+
+    // P + Q  Point Addition
+    ECPoint R = curve.pointAdd(P, Q);
+    cout << "\nR = P + Q" << endl;
+    if (R.infinity)
+        cout << "R is point at infinity\n";
+    else
+        cout << "R = (" << rep(R.x) << ", " << rep(R.y) << ")\n";
+
+    // 2P Point Doubling
+    ECPoint D = curve.pointDouble(P);
+    cout << "\nD = 2P" << endl;
+    if (D.infinity)
+        cout << "D is point at infinity\n";
+    else
+        cout << "D = (" << rep(D.x) << ", " << rep(D.y) << ")\n";
+
+    // scalar multiplication
+    ECPoint SR = curve.scalarMultiply(P, bEC);
+    cout << "\nSR.x = " << SR.x << ", SR.y = " << SR.y << endl;
 
     return 0;
 }
@@ -112,5 +158,5 @@ int main()
 
 
 
-// g++ AppliedCrypto.cpp El_Gamal.cpp -lntl -lgmp -o Myexe
+// g++ AppliedCrypto.cpp Eliptic_Curve.cpp -lntl -lgmp -o Myexe
 // ./Myexe
