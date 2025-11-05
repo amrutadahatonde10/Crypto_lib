@@ -5,7 +5,6 @@ ECPoint ELCurve::pointAdd(const ECPoint &P, const ECPoint &Q) const
     if (P.infinity) return Q;
     if (Q.infinity) return P;
 
-    // Point at infinity if P == -Q
     if (P.x == Q.x && P.y == -Q.y)
         return ECPoint();
 

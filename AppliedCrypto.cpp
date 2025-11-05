@@ -104,16 +104,15 @@ int main()
 
 
 
- cout << "\n\n------------------------- Elliptic Curve -------------------------\n";
+ //Elliptic Curve 
+
 
     ZZ p = conv<ZZ>(97); // prime modulus
     ZZ aEC = conv<ZZ>(2);
     ZZ bEC = conv<ZZ>(3);
 
-    // Create elliptic curve and initialize ZZ_p field
     ELCurve curve(p, aEC, bEC);
 
-    // Define points using ZZ_p type
     ZZ_p Px = to_ZZ_p(3);
     ZZ_p Py = to_ZZ_p(6);
     ZZ_p Qx = to_ZZ_p(80);
@@ -122,7 +121,7 @@ int main()
     ECPoint P(Px, Py);
     ECPoint Q(Qx, Qy);
 
-    // Point At Curve or Not [ Validation ]
+    // Point At Curve or Not
     cout << "\nChecking points validity:\n";
     cout << "P is " << (curve.isValidPoint(P) ? "valid" : "invalid") << endl;
     cout << "Q is " << (curve.isValidPoint(Q) ? "valid" : "invalid") << endl;
