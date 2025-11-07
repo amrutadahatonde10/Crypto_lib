@@ -1,12 +1,12 @@
 #include <iostream>
-#include "Vigenere_Cipher.hpp"
-#include "Hill_Cipher.hpp"
-#include "Shift_Cipher.hpp"
-#include "OneTimePad.hpp"
-#include "Diffie_Hellman.hpp"
 #include <NTL/ZZ.h>
-#include "El_Gamal.hpp"
-#include "Eliptic_Curve.hpp"
+#include "Vigenere_Cipher/Vigenere_Cipher.hpp"
+#include "Hill_Cipher/Hill_Cipher.hpp"
+#include "Shift_Cipher/Shift_Cipher.hpp"
+#include "OTP/OneTimePad.hpp"
+#include "Diffie_Hellman/Diffie_Hellman.hpp"
+#include "El-Gamal/El_Gamal.hpp"
+#include "Eliptic_Curve/Eliptic_Curve.hpp"
 
 using namespace std;
 using namespace NTL;
@@ -157,5 +157,5 @@ int main()
 
 
 
-// g++ AppliedCrypto.cpp Eliptic_Curve.cpp -lntl -lgmp -o Myexe
+// g++ AppliedCrypto.cpp Eliptic_Curve/Eliptic_Curve.cpp -lntl -lgmp -o Myexe
 // ./Myexe
