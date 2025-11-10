@@ -22,7 +22,7 @@ private:
     int p, q, d;
 
 public:
-    int n, e;
+    int n, e; 
     ELCurve(const ZZ_p &A, const ZZ_p &B) : a(A), b(B) {}
 
     bool isValidPoint(const ECPoint &P) const;
