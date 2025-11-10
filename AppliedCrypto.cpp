@@ -104,47 +104,89 @@ int main()
 
 
 
- //Elliptic Curve 
+// cout << "\n\n------------------------- Elliptic Curve -------------------------\n";
 
+    // ZZ p = conv<ZZ>(97); // prime modulus
+    // ZZ aEC = conv<ZZ>(2);
+    // ZZ bEC = conv<ZZ>(3);
 
-    ZZ p = conv<ZZ>(97); // prime modulus
-    ZZ aEC = conv<ZZ>(2);
-    ZZ bEC = conv<ZZ>(3);
+    // // Create elliptic curve and initialize ZZ_p field
+    // ELCurve curve(p, aEC, bEC);
 
-    ELCurve curve(p, aEC, bEC);
+    // // Define points using ZZ_p type
+    // ZZ_p Px = to_ZZ_p(3);
+    // ZZ_p Py = to_ZZ_p(6);
+    // ZZ_p Qx = to_ZZ_p(80);
+    // ZZ_p Qy = to_ZZ_p(10);
 
-    ZZ_p Px = to_ZZ_p(3);
-    ZZ_p Py = to_ZZ_p(6);
-    ZZ_p Qx = to_ZZ_p(80);
-    ZZ_p Qy = to_ZZ_p(10);
+    // ECPoint P(Px, Py);
+    // ECPoint Q(Qx, Qy);
 
-    ECPoint P(Px, Py);
-    ECPoint Q(Qx, Qy);
+    // // Point At Curve or Not [ Validation ]
+    // cout << "\nChecking points validity:\n";
+    // cout << "P is " << (curve.isValidPoint(P) ? "valid" : "invalid") << endl;
+    // cout << "Q is " << (curve.isValidPoint(Q) ? "valid" : "invalid") << endl;
 
-    // Point At Curve or Not
-    cout << "\nChecking points validity:\n";
-    cout << "P is " << (curve.isValidPoint(P) ? "valid" : "invalid") << endl;
-    cout << "Q is " << (curve.isValidPoint(Q) ? "valid" : "invalid") << endl;
+    // // P + Q  Point Addition
+    // ECPoint R = curve.pointAdd(P, Q);
+    // cout << "\nR = P + Q" << endl;
+    // if (R.infinity)
+    //     cout << "R is point at infinity\n";
+    // else
+    //     cout << "R = (" << rep(R.x) << ", " << rep(R.y) << ")\n";
 
-    // P + Q  Point Addition
-    ECPoint R = curve.pointAdd(P, Q);
-    cout << "\nR = P + Q" << endl;
-    if (R.infinity)
-        cout << "R is point at infinity\n";
-    else
-        cout << "R = (" << rep(R.x) << ", " << rep(R.y) << ")\n";
+    // // 2P Point Doubling
+    // ECPoint D = curve.pointDouble(P);
+    // cout << "\nD = 2P" << endl;
+    // if (D.infinity)
+    //     cout << "D is point at infinity\n";
+    // else
+    //     cout << "D = (" << rep(D.x) << ", " << rep(D.y) << ")\n";
 
-    // 2P Point Doubling
-    ECPoint D = curve.pointDouble(P);
-    cout << "\nD = 2P" << endl;
-    if (D.infinity)
-        cout << "D is point at infinity\n";
-    else
-        cout << "D = (" << rep(D.x) << ", " << rep(D.y) << ")\n";
+    // // scalar multiplication
+    // ECPoint SR = curve.scalarMultiply(P, bEC);
+    // cout << "\nSR.x = " << SR.x << ", SR.y = " << SR.y << endl;
 
-    // scalar multiplication
-    ECPoint SR = curve.scalarMultiply(P, bEC);
-    cout << "\nSR.x = " << SR.x << ", SR.y = " << SR.y << endl;
+    
+
+    cout << "\n---------------- ElGamal over Elliptic Curve ----------------\n";
+
+    ZZ p = conv<ZZ>(97);
+    ZZ_p::init(p);
+
+    ZZ_p a = conv<ZZ_p>(2);
+    ZZ_p b = conv<ZZ_p>(3);
+
+    ELCurve curve(a, b);
+    ECPoint G(conv<ZZ_p>(2), conv<ZZ_p>(7));
+    ZZ n = conv<ZZ>(5);
+
+    // --- Key Generation ---
+    ZZ priv = conv<ZZ>(2);
+    ECPoint pub = curve.generatePublicKey(G, priv);
+
+    cout << "Private key: " << priv << "\n";
+    cout << "Public key: (" << pub.x << ", " << pub.y << ")\n";
+
+    // --- Encryption ---
+    ECPoint M(conv<ZZ_p>(3), conv<ZZ_p>(6));
+    ZZ k = conv<ZZ>(4);
+    auto cipher = curve.encrypt(M, G, pub, k);
+
+    cout << "\nCiphertext:\nC1 = (" << cipher.first.x << ", " << cipher.first.y << ")\n";
+    cout << "C2 = (" << cipher.second.x << ", " << cipher.second.y << ")\n";
+
+    // --- Decryption ---
+    ECPoint dec = curve.decrypt(cipher, priv);
+    cout << "\nDecrypted Message: (" << dec.x << ", " << dec.y << ")\n";
+
+    // --- Digital Signature ---
+    ZZ msgHash = conv<ZZ>(25);
+    auto sig = curve.sign(msgHash, priv, G, n);
+    cout << "\nSignature: (r=" << sig.first << ", s=" << sig.second << ")\n";
+
+    bool valid = curve.verify(msgHash, sig, G, pub, n);
+    cout << "Signature verification: " << (valid ? "VALID" : "INVALID") << endl;
 
     return 0;
 }
