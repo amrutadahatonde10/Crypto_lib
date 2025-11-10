@@ -147,7 +147,7 @@ int main()
     // ECPoint SR = curve.scalarMultiply(P, bEC);
     // cout << "\nSR.x = " << SR.x << ", SR.y = " << SR.y << endl;
 
-    
+
 
     cout << "\n---------------- ElGamal over Elliptic Curve ----------------\n";
 
@@ -192,7 +192,7 @@ int main()
 }
 
 
-
+  
 
 
 

@@ -17,7 +17,7 @@ struct ECPoint
 
 class ELCurve
 {
-private:
+private: 
     ZZ_p a, b; // Curve: y^2 = x^3 + a*x + b
     int p, q, d;
 
