@@ -171,7 +171,7 @@ int main()
     // --- Encryption ---
     ECPoint M(conv<ZZ_p>(3), conv<ZZ_p>(6));
     ZZ k = conv<ZZ>(4);
-    auto cipher = curve.encrypt(M, G, pub, k);
+    auto cipher = curve.encrypt(M, G, pub, k);  
 
     cout << "\nCiphertext:\nC1 = (" << cipher.first.x << ", " << cipher.first.y << ")\n";
     cout << "C2 = (" << cipher.second.x << ", " << cipher.second.y << ")\n";
