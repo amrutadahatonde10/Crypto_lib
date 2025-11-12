@@ -58,7 +58,7 @@ ECPoint ELCurve::scalarMultiply(const ECPoint &P, const ZZ &k) const
     return R;
 }
 
-// ------------------ ElGamal Encryption System ------------------
+// ------------------  ElGamal over Elliptic Curve  ------------------
 
 ECPoint ELCurve::generatePublicKey(const ECPoint &G, const ZZ &priv) const
 {
@@ -117,22 +117,3 @@ bool ELCurve::verify(const ZZ &msgHash, const std::pair<ZZ, ZZ> &sig, const ECPo
     return v == r;
 }
 
-void ELCurve::KeyGen(int p,int q)
-{
-    this->n = p * q;
-    int value = (p - 1) * (q - 1);
-    this->e = 5;
-    this->d = InvMod(e, value);
-}
-
-int ELCurve::Encrypt(int m)
-{
-    // Placeholder
-    return 0;
-}
-
-bool ELCurve::Decrypt(int c)
-{
-    // Placeholder
-    return false;
-}

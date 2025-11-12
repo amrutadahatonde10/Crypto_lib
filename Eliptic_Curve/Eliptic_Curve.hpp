@@ -39,9 +39,6 @@ public:
     std::pair<ZZ, ZZ> sign(const ZZ &msgHash, const ZZ &priv, const ECPoint &G, const ZZ &n) const;
     bool verify(const ZZ &msgHash, const std::pair<ZZ, ZZ> &sig, const ECPoint &G, const ECPoint &pubKey, const ZZ &n) const;
 
-    void KeyGen(int p, int q);
-    int Encrypt(int m);
-    bool Decrypt(int c);
 
 };
 

@@ -162,7 +162,7 @@ int main()
     ZZ n = conv<ZZ>(5);
 
     // --- Key Generation ---
-    ZZ priv = conv<ZZ>(2);
+    ZZ priv = conv<ZZ>(4);  // private key
     ECPoint pub = curve.generatePublicKey(G, priv);
 
     cout << "Private key: " << priv << "\n";
@@ -170,7 +170,7 @@ int main()
 
     // --- Encryption ---
     ECPoint M(conv<ZZ_p>(3), conv<ZZ_p>(6));
-    ZZ k = conv<ZZ>(4);
+    ZZ k = conv<ZZ>(3);               // select y
     auto cipher = curve.encrypt(M, G, pub, k);  
 
     cout << "\nCiphertext:\nC1 = (" << cipher.first.x << ", " << cipher.first.y << ")\n";
@@ -182,7 +182,7 @@ int main()
 
     // --- Digital Signature ---
     ZZ msgHash = conv<ZZ>(25);
-    auto sig = curve.sign(msgHash, priv, G, n);
+    auto sig = curve.sign(msgHash, priv, G, n); // 25, 4, (2,7), 5
     cout << "\nSignature: (r=" << sig.first << ", s=" << sig.second << ")\n";
 
     bool valid = curve.verify(msgHash, sig, G, pub, n);
