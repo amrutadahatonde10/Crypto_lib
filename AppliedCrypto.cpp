@@ -193,33 +193,23 @@ int main()
 
 
 
-    cout << "\n---------------- Integer Factorization ----------------\n";
-
-    unsigned int bitsPerPrime = 32; 
-    cout << "Generating RSA keys ...\n";
-    RSAKeyPair key = RSA_GenerateKeys(bitsPerPrime);
-
-    cout << "n = " << key.n << "\n";
-    cout << "e = " << key.e << "\n";
-    cout << "d = " << key.d << "\n";
-    cout << "p = " << key.p << "\n";
-    cout << "q = " << key.q << "\n";
-
-    ZZ m = conv<ZZ>(12345);
-    cout << "Plain: " << m << "\n";
-
-    ZZ c = RSA_Encrypt(m, key);
-    cout << "Cipher: " << c << "\n";
-
-    ZZ mrec = RSA_Decrypt(c, key);
-    cout << "Decrypted: " << mrec << "\n";
-
-    ZZ hashv = conv<ZZ>(987654321);
-    ZZ sig = RSA_Sign(hashv, key);
-    cout << "Signature: " << sig << "\n";
-    cout << "Verify: " << (RSA_Verify(hashv, sig, key) ? "OK" : "FAIL") << "\n";
+    unsigned int bits = 32;
+    ZZ e = ZZ(65537);           // RSA public exponent
 
 
+    RSAKey key = RSA_GenerateKeys(bits, e); 
+
+
+    ZZ message = ZZ(12345);
+    cout << "Plain: " << message << endl;
+
+
+    ZZ cipher = RSA_Encrypt(message, key);
+    cout << "Cipher: " << cipher << endl;
+
+
+    ZZ decrypted = RSA_Decrypt(cipher, key);
+    cout << "Decrypted: " << decrypted << endl;
 
 
 
@@ -281,3 +271,5 @@ int main()
 
 // g++ AppliedCrypto.cpp Eliptic_Curve/Eliptic_Curve.cpp -lntl -lgmp -o Myexe
 // ./Myexe
+
+//g++ AppliedCrypto.cpp Int_Fact/RSA.cpp -lntl -lgmp -o Myexe
