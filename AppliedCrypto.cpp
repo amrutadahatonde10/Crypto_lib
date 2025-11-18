@@ -8,6 +8,7 @@
 #include "El-Gamal/El_Gamal.hpp"
 #include "Eliptic_Curve/Eliptic_Curve.hpp"
 #include "Int_Fact/RSA.hpp"
+#include "R-adding_walk/R-adding.hpp"
 
 using namespace std;
 using namespace NTL;
@@ -192,32 +193,51 @@ int main()
 
 
 
+    // cout << "\n---------------- RSA----------------\n";
 
-    unsigned int bits = 32;
-    ZZ e = ZZ(65537);           // RSA public exponent
-
-
-    RSAKey key = RSA_GenerateKeys(bits, e); 
+    // unsigned int bits = 32;
+    // ZZ e = ZZ(65537);           // RSA public exponent
 
 
-    ZZ message = ZZ(12345);
-    cout << "Plain: " << message << endl;
+    // RSAKey key = RSA_GenerateKeys(bits, e); 
 
 
-    ZZ cipher = RSA_Encrypt(message, key);
-    cout << "Cipher: " << cipher << endl;
+    // ZZ message = ZZ(12345);
+    // cout << "Plain: " << message << endl;
 
 
-    ZZ decrypted = RSA_Decrypt(cipher, key);
-    cout << "Decrypted: " << decrypted << endl;
+    // ZZ cipher = RSA_Encrypt(message, key);
+    // cout << "Cipher: " << cipher << endl;
 
 
-
+    // ZZ decrypted = RSA_Decrypt(cipher, key);
+    // cout << "Decrypted: " << decrypted << endl;
 
 
 
 
 
+    cout << "\n---------------- R-adding walk----------------\n";
+
+
+    ZZ p = ZZ(197);
+    ZZ g = ZZ(123);
+    ZZ h = ZZ(111);
+    long r = 5; // partitions
+
+    // Create solver object
+    RAddingPollard solver(p, g, h, r);
+
+    // Optional: supply deterministic table instead of random
+    // Use vectors of length r (delta and tau). Example table used in earlier explanation:
+    vector<ZZ> delta = {ZZ(1), ZZ(7), ZZ(4), ZZ(8), ZZ(8)};
+    vector<ZZ> tau   = {ZZ(4), ZZ(5), ZZ(2), ZZ(5), ZZ(2)};
+    solver.setTable(delta, tau);
+
+    // Run solver
+    ZZ x = solver.solve();
+
+    cout << "\nFinal solution x = " << x << "\n";
 
 
 
@@ -226,38 +246,7 @@ int main()
 
 
 
-
-
-
-
-
-
-
-
-
-
-    // cout << "\n---------------- Eliptic Curve over integrated + point Compression ----------------\n";
     
-    // ZZ prime = conv<ZZ>(97);
-    // ZZ_p::init(prime);
-
-    // ELCurve curve(to_ZZ_p(2), to_ZZ_p(3)); 
-    // ECPoint G(to_ZZ_p(3), to_ZZ_p(7));
-
-    // ZZ priv = conv<ZZ>(5);
-    // ECPoint pub = curve.generatePublicKey(G, priv);
-
-    // cout << "Public Key: (" << pub.x << ", " << pub.y << ")\n";
-
-    // CompressedPoint cp = curve.compressPoint(pub);
-    // cout << "Compressed form -> x: " << cp.x << ", y is odd: " << cp.y_is_odd << "\n";
-
-    // ECPoint decompressed = curve.decompressPoint(cp);
-    // cout << "Decompressed -> (" << decompressed.x << ", " << decompressed.y << ")\n";
-
-    // cout << " " << (curve.isValidPoint(decompressed) ? "Point is valid on the curve \n" : "Invalid point \n") << "\n";
-
-
     return 0;
 }
 
@@ -273,3 +262,5 @@ int main()
 // ./Myexe
 
 //g++ AppliedCrypto.cpp Int_Fact/RSA.cpp -lntl -lgmp -o Myexe
+
+// g++ AppliedCrypto.cpp R-adding_walk/R-adding.cpp -lntl -lgmp -o Myexe
