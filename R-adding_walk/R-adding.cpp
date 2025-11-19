@@ -7,11 +7,9 @@ using namespace std;
 RAddingPollard::RAddingPollard(const ZZ& p, const ZZ& g, const ZZ& h, long r)
     : p_(p), g_(g), h_(h), order_(p - 1), r_(r)
 {
-    // allocate table with r entries (default random)
     delta_.assign(r_, ZZ(0));
     tau_.assign(r_, ZZ(0));
 
-    // By default generate random small deltas/tau in [1, order-1]
     for (long i = 0; i < r_; ++i) {
         delta_[i] = RandomBnd(order_); // random in [0, order-1]
         tau_[i]   = RandomBnd(order_);
@@ -40,7 +38,7 @@ RAddingPollard::State RAddingPollard::f(const State& s) {
 
     // update x by multiplying the precomputed M_u
     ZZ M = computeM(u);
-    next.x = (s.x * M) % p_;
+    next.x = (s.x * M) % p_; // x1 find
 
     // update exponents modulo order
     next.a = (s.a + delta_[u]) % order_;
@@ -50,9 +48,7 @@ RAddingPollard::State RAddingPollard::f(const State& s) {
 }
 
 ZZ RAddingPollard::solve() {
-    // Outer loop: retry when useless collision or verification fails
     while (true) {
-        // Random starting exponents a0,b0 (recommended)
         ZZ a0 = RandomBnd(order_);
         ZZ b0 = RandomBnd(order_);
 
@@ -73,10 +69,10 @@ ZZ RAddingPollard::solve() {
         // iterate until collision
         while (true) {
             ++i;
-            // advance slow by 1
+            // slow by 1
             slow = f(slow);
 
-            // advance fast by 2
+            // fast by 2
             fast = f(fast);
             fast = f(fast);
 
@@ -88,13 +84,12 @@ ZZ RAddingPollard::solve() {
                 break;
             }
 
-            // safety: if this run too long, restart with new seed
             if (i > 10 * conv<long>(order_)) {
                 cout << "Iteration limit reached for this run. Restarting...\n\n";
                 restart = true;
                 break;
             }
-        } // end inner while
+        } 
 
         if (restart) continue;
 
@@ -117,7 +112,7 @@ ZZ RAddingPollard::solve() {
         ZZ den_inv;
         if (InvModStatus(den_inv, den, order_) != 0) {
             cout << "No inverse exists for den. Useless collision. Retrying with new seed...\n\n";
-            continue; // retry whole algorithm with new random start
+            continue; 
         }
 
         // compute candidate x
@@ -134,5 +129,5 @@ ZZ RAddingPollard::solve() {
             cout << "Verification failed. Retrying with new seed...\n\n";
             continue;
         }
-    } // end outer while (never exits except by return)
+    } 
 }

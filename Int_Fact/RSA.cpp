@@ -6,12 +6,12 @@ using namespace NTL;
 using namespace std;
 
 RSAKey RSA_GenerateKeys(unsigned int bitsPerPrime, const ZZ &publicE) {
-RSAKey key;
+RSAKey key;   // store n,e,d
 ZZ p, q, e = publicE;
 
 
 do {
-do { p = RandomBits_ZZ(bitsPerPrime) | 1; } while (!ProbPrime(p));
+do { p = RandomBits_ZZ(bitsPerPrime) | 1; } while (!ProbPrime(p));  // p=32 bit random odd prime
 do { q = RandomBits_ZZ(bitsPerPrime) | 1; } while (!ProbPrime(q) || p == q);
 } while (p == q);
 

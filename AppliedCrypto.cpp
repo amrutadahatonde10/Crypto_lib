@@ -193,25 +193,25 @@ int main()
 
 
 
-    // cout << "\n---------------- RSA----------------\n";
+    cout << "\n---------------- RSA----------------\n";
 
-    // unsigned int bits = 32;
-    // ZZ e = ZZ(65537);           // RSA public exponent
-
-
-    // RSAKey key = RSA_GenerateKeys(bits, e); 
+    unsigned int bits = 32;
+    ZZ e = ZZ(65537);           // RSA public exponent
 
 
-    // ZZ message = ZZ(12345);
-    // cout << "Plain: " << message << endl;
+    RSAKey key = RSA_GenerateKeys(bits, e); 
 
 
-    // ZZ cipher = RSA_Encrypt(message, key);
-    // cout << "Cipher: " << cipher << endl;
+    ZZ message = ZZ(12345);
+    cout << "Plain: " << message << endl;
 
 
-    // ZZ decrypted = RSA_Decrypt(cipher, key);
-    // cout << "Decrypted: " << decrypted << endl;
+    ZZ cipher = RSA_Encrypt(message, key);
+    cout << "Cipher: " << cipher << endl;
+
+
+    ZZ decrypted = RSA_Decrypt(cipher, key);
+    cout << "Decrypted: " << decrypted << endl;
 
 
 
@@ -223,18 +223,14 @@ int main()
     ZZ p = ZZ(197);
     ZZ g = ZZ(123);
     ZZ h = ZZ(111);
-    long r = 5; // partitions
+    long r = 5; 
 
-    // Create solver object
     RAddingPollard solver(p, g, h, r);
 
-    // Optional: supply deterministic table instead of random
-    // Use vectors of length r (delta and tau). Example table used in earlier explanation:
     vector<ZZ> delta = {ZZ(1), ZZ(7), ZZ(4), ZZ(8), ZZ(8)};
     vector<ZZ> tau   = {ZZ(4), ZZ(5), ZZ(2), ZZ(5), ZZ(2)};
     solver.setTable(delta, tau);
 
-    // Run solver
     ZZ x = solver.solve();
 
     cout << "\nFinal solution x = " << x << "\n";
