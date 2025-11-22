@@ -13,7 +13,7 @@
 using namespace std;
 using namespace NTL;
 
-int main()
+int main() 
 {
     // cout << "hello World";
     // string ans = "Cryptography";
