@@ -9,7 +9,7 @@
 #include "Eliptic_Curve/Eliptic_Curve.hpp"
 #include "Int_Fact/RSA.hpp"
 #include "R-adding_walk/R-adding.hpp"
-
+ 
 using namespace std;
 using namespace NTL;
 
